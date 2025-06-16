@@ -1,0 +1,7 @@
+*.class
+**/bin/
+.vscode/
+*.tmp
+*.swp
+*~
+*.log
