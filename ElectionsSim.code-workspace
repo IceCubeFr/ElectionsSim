@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.project.sourcePaths": [
+			"src",
+			"tests"
+		],
+		"java.project.referencedLibraries": [
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.media.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.base.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.web.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx-swt.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.controls.jar",
+			"/home/flopsi/Documents/test-lib/junit-platform-console-standalone-1.13.0-M3.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.graphics.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.fxml.jar",
+			"/home/flopsi/Documents/Université/S2/IHM/openjfx-21.0.7_linux-x64_bin-sdk/javafx-sdk-21.0.7/lib/javafx.swing.jar"
+		]
+	}
+}
