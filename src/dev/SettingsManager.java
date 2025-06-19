@@ -23,8 +23,14 @@ public class SettingsManager {
      * 
      * @param candidats La liste des candidats disponibles pour le vote.
      */
-    public SettingsManager(ArrayList<String> candidats) {
+    public SettingsManager(ArrayList<String> candidats, String secretCode) {
         this.candidats = candidats;
+        this.canVoteWhite = false;
+        this.canAbstention = false;
+        this.secretCode = secretCode;
+        this.askSecretCode = true;
+        this.minRandomAbstention = 0;
+        this.maxRandomAbstention = 10;
     }
 
     /**

@@ -36,6 +36,8 @@ public class Scenario {
      */
     public void removeVoix(int i) {this.votes.remove(i);}
 
+    public ArrayList<Voix> getVotes() {return this.votes;}
+
     /**
      * Récupère le nombre de voix du scénario (abstention et votes blancs compris)
      * @return nbVoix
@@ -81,13 +83,15 @@ public class Scenario {
     public Map<String, Integer> getResults() {
         Map<String, Integer> results = new HashMap<String, Integer>();
         for(Voix v : this.votes) {
-            int toAdd = 0;
-            if(results.keySet().contains(v.getCandidat())) {
-                toAdd = results.get(v.getCandidat()) + 1;
-            } else {
-                toAdd = 1;
+            if(!v.isAbstention() && !v.isWhite()) {
+                int toAdd = 0;
+                if(results.keySet().contains(v.getCandidat())) {
+                    toAdd = results.get(v.getCandidat()) + 1;
+                } else {
+                    toAdd = 1;
+                }
+                results.put(v.getCandidat(), toAdd);
             }
-            results.put(v.getCandidat(), toAdd);
         }
         return results;
     }
