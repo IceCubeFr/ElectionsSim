@@ -58,6 +58,16 @@ public class Scenario {
         return abs;
     }
 
+    public int nbBlanc() {
+        int abs = 0;
+        for(Voix v : this.votes) {
+            if(v.isWhite()) {
+                abs++;
+            }
+        }
+        return abs;
+    }
+
     /**
      * Renvoie le nombre de voix exprimés (nbVoix - nbAbstention)
      * @return votes exprimés
