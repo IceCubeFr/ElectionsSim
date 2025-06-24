@@ -18,6 +18,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -42,6 +43,8 @@ public class Start extends Application {
     public static ArrayList<String> candidats = new ArrayList<String>();
     public static String secretCode = "aaa";
     private static Elections elec = new Elections(candidats, secretCode);
+    private static String pastelGreen = "#A8E6A3";
+    private static String pastelRed = "#F5A9A9";
 
     public static void update(int index) {
         main.getChildren().removeAll(main.getChildren());
@@ -231,14 +234,100 @@ public class Start extends Application {
         spiMax.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, spiMin.getValue() + 1 > maxVal ? spiMin.getValue() + 1 : maxVal));
     }
 
+    public static void setButtonSettings(Button b, boolean value) {
+        b.setMaxWidth(200);
+        b.setMinWidth(200);
+        if(value) {
+            b.setText("Oui");
+            b.setStyle(
+                "-fx-background-color: " + pastelGreen + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            );
+
+            b.setOnMouseEntered(e -> b.setStyle(
+                "-fx-background-color: rgba(168, 230, 163, 1.0), rgba(255, 255, 255, 0.2);" +  // deux couches : fond + filtre
+                "-fx-background-insets: 0, 0;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            ));
+
+            b.setOnMouseExited(e -> b.setStyle(
+                "-fx-background-color: " + pastelGreen + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            ));
+        } else {
+            b.setText("Non");
+            b.setStyle(
+                "-fx-background-color: " + pastelRed + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            );
+            b.setOnMouseEntered(e -> b.setStyle(
+                "-fx-background-color: rgba(245, 169, 169, 1.0), rgba(255, 255, 255, 0.2);" +  // fond + filtre blanc
+                "-fx-background-insets: 0, 0;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            ));
+            b.setOnMouseExited(e -> b.setStyle(
+                "-fx-background-color: " + pastelRed + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-border-radius: 8px;" +
+                "-fx-border-color: transparent;"
+            ));
+        }
+    }
+
+    public static void setSpinnerStyle(Spinner<Integer> spinner) {
+        spinner.setStyle(
+            "-fx-background-color: white;" +
+            "-fx-border-color: black;" +
+            "-fx-border-radius: 6px;" +
+            "-fx-background-radius: 6px;" +
+            "-fx-border-width: 1px;" +
+            "-fx-padding: 3px;" +
+            "-fx-font-size: 14px;"
+        );
+
+        spinner.getEditor().setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-border-width: 0;" +
+            "-fx-font-size: 14px;" +
+            "-fx-padding: 2px 6px;" +
+            "-fx-text-fill: black;"
+        );
+    }
+
     public static void settings() {
+        // Bornes aléatoires abstention
+
         Label nbAbs = new Label("Bornes aléatoires du nombre d'abstentionnistes : ");
         nbAbs.setFont(taille18);
         HBox bornesAbs = new HBox();
         Label min = new Label("Min : ");
         Spinner<Integer> spiMin = new Spinner<Integer>();
+        setSpinnerStyle(spiMin);
         Label max = new Label("Max : ");
         Spinner<Integer> spiMax = new Spinner<Integer>();
+        setSpinnerStyle(spiMax);
         spiMax.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, elec.getSettings().getMaxRandomAbstention()));
         updateSpinners(spiMin, spiMax, false);
         spiMin.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -254,7 +343,225 @@ public class Start extends Application {
         bornesAbs.setSpacing(10);
         bornesAbs.setAlignment(Pos.CENTER_LEFT);
         bornesAbs.getChildren().addAll(min, spiMin, max, spiMax);
-        main.getChildren().addAll(nbAbs, bornesAbs);
+
+        // Bouton possibilité abstention
+        HBox abs = new HBox();
+        Label absLabel = new Label("Les personnes peuvent s'abstenir");
+        absLabel.setFont(taille18);
+        Region absRegion = new Region();
+        HBox.setHgrow(absRegion, Priority.ALWAYS);
+        Button absButton = new Button();
+        setButtonSettings(absButton, elec.getSettings().isCanAbstention());
+        absButton.setOnAction(e -> {
+            elec.getSettings().setCanAbstention(!elec.getSettings().isCanAbstention());
+            setButtonSettings(absButton, elec.getSettings().isCanAbstention());
+        });
+        abs.getChildren().addAll(absLabel, absRegion, absButton);
+
+        // Bouton possibilité vote blanc
+        HBox blanc = new HBox();
+        Label blancLabel = new Label("Les personnes peuvent voter blanc");
+        blancLabel.setFont(taille18);
+        Region blancRegion = new Region();
+        HBox.setHgrow(blancRegion, Priority.ALWAYS);
+        Button blancButton = new Button();
+        setButtonSettings(blancButton, elec.getSettings().isCanVoteWhite());
+        blancButton.setOnAction(e -> {
+            elec.getSettings().setCanVoteWhite(!elec.getSettings().isCanVoteWhite());
+            setButtonSettings(blancButton, elec.getSettings().isCanVoteWhite());
+        });
+        blanc.getChildren().addAll(blancLabel, blancRegion, blancButton);
+
+        // Bouton demande code secret
+        HBox secret = new HBox();
+        Label secretLabel = new Label("Demander le code secret à chaque vote");
+        secretLabel.setFont(taille18);
+        Region secretRegion = new Region();
+        HBox.setHgrow(secretRegion, Priority.ALWAYS);
+        Button secretButton = new Button();
+        setButtonSettings(secretButton, elec.getSettings().isAskSecretCode());
+        secretButton.setOnAction(e -> {
+            elec.getSettings().setAskSecretCode(!elec.getSettings().isAskSecretCode());
+            setButtonSettings(secretButton, elec.getSettings().isAskSecretCode());
+        });
+        secret.getChildren().addAll(secretLabel, secretRegion, secretButton);
+
+        // Liste des candidats
+        VBox candidats = new VBox();
+        candidats.setSpacing(20);
+        Label candLabel = new Label("Modifier les candidats");
+        candLabel.setFont(taille18);
+        ListView<String> candidatList = new ListView<String>();
+        candidatList.setMaxHeight(200);
+        initCandidatList(candidatList);
+        HBox buttons = new HBox();
+        buttons.setSpacing(20);
+        Button edit = new Button("Modifier");
+        setButtonBlueStyle(edit);
+        HBox.setHgrow(edit, Priority.ALWAYS);
+        edit.setOnAction(e -> {
+            String selectedItem = candidatList.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                askEditCandidat(selectedItem, candidatList);
+            }
+        });
+        Button delete = new Button("Supprimer");
+        setButtonBlueStyle(delete);
+        delete.setOnAction(e -> {
+            String selectedItem = candidatList.getSelectionModel().getSelectedItem();
+            if(selectedItem != null) {
+                doubleCheckBeforeDeletion(selectedItem, candidatList);
+            }
+        });
+        HBox.setHgrow(delete, Priority.ALWAYS);
+        Button create = new Button("Ajouter");
+        create.setOnAction(e -> {
+            askNewCandidat(candidatList);
+        });
+        setButtonBlueStyle(create);
+        HBox.setHgrow(create, Priority.ALWAYS);
+        buttons.setMaxWidth(Double.MAX_VALUE);
+        edit.setMaxWidth(Double.MAX_VALUE);
+        delete.setMaxWidth(Double.MAX_VALUE);
+        create.setMaxWidth(Double.MAX_VALUE);
+        buttons.getChildren().addAll(edit, delete, create);
+        candidats.getChildren().addAll(candLabel, candidatList, buttons);
+
+        // Pied de page
+        Label desc = new Label("Toutes les modifications sont sauvegardées automatiquement. \nLes modifications des candidats s'appliqueront au prochain tour et ne sont pas rétroactives.");
+        desc.setStyle("-fx-font-style: italic;");
+
+        // Ajout des objets
+        main.getChildren().addAll(nbAbs, bornesAbs, abs, blanc, secret, candidats, desc);
+    }
+
+    public static void askNewCandidat(ListView<String> cands) {
+        Stage stg = new Stage();
+        VBox editing = new VBox();
+        editing.setAlignment(Pos.CENTER);
+        editing.setSpacing(20);
+        Label texte = new Label("Quel est le nom du nouveau candidat ?");
+        texte.setFont(taille20);
+        TextField tf = new TextField();
+        tf.setOnAction(e -> {
+            elec.getCandidats().add(tf.getText());
+            cands.getItems().removeAll(cands.getItems());
+            initCandidatList(cands);
+            stg.close();
+        });
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        Button annuler = new Button("Annuler");
+        HBox.setHgrow(annuler, Priority.ALWAYS);
+        setButtonBlueStyle(annuler);
+        annuler.setOnAction(e -> {
+            stg.close();
+        });
+        Button valider = new Button("Valider");
+        setButtonBlueStyle(valider);
+        HBox.setHgrow(valider, Priority.ALWAYS);
+        valider.setOnAction(e -> {
+            elec.getCandidats().add(tf.getText());
+            cands.getItems().removeAll(cands.getItems());
+            initCandidatList(cands);
+            stg.close();
+        });
+        buttons.getChildren().addAll(annuler, valider);
+        buttons.setSpacing(20);
+        editing.getChildren().addAll(texte, tf, buttons);
+        Scene sc = new Scene(editing, 800, 300);
+        stg.setResizable(false);
+        stg.setScene(sc);
+        stg.setTitle("Nouveau candidat");
+        stg.show();
+    }
+
+    public static void doubleCheckBeforeDeletion(String cand, ListView<String> cands) {
+        Stage stg = new Stage();
+        VBox suppressing = new VBox();
+        suppressing.setAlignment(Pos.CENTER);
+        suppressing.setSpacing(20);
+        Label texte = new Label("Êtes vous sur de vouloir supprimer " + cand + " ?");
+        texte.setFont(taille20);
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        Button annuler = new Button("Annuler");
+        HBox.setHgrow(annuler, Priority.ALWAYS);
+        setButtonBlueStyle(annuler);
+        annuler.setOnAction(e -> {
+            stg.close();
+        });
+        Button valider = new Button("Valider");
+        setButtonBlueStyle(valider);
+        HBox.setHgrow(valider, Priority.ALWAYS);
+        valider.setOnAction(e -> {
+            elec.getCandidats().remove(cand);
+            cands.getItems().removeAll(cands.getItems());
+            initCandidatList(cands);
+            stg.close();
+        });
+        buttons.getChildren().addAll(annuler, valider);
+        buttons.setSpacing(20);
+        suppressing.getChildren().addAll(texte, buttons);
+        Scene sc = new Scene(suppressing, 800, 300);
+        stg.setResizable(false);
+        stg.setScene(sc);
+        stg.setTitle(cand);
+        stg.show();
+    }
+
+    public static void initCandidatList(ListView<String> lv) {
+        ArrayList<String> cands = elec.getCandidats();
+        lv.getItems().addAll(cands);
+        lv.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                String selectedItem = lv.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    askEditCandidat(selectedItem, lv);
+                }
+            }
+        });
+    }
+
+    public static void askEditCandidat(String oldName, ListView<String> cands) {
+        Stage stg = new Stage();
+        VBox editing = new VBox();
+        editing.setAlignment(Pos.CENTER);
+        editing.setSpacing(20);
+        Label texte = new Label("Quel est le nouveau nom à donner ?");
+        texte.setFont(taille20);
+        TextField tf = new TextField();
+        tf.setOnAction(e -> {
+            elec.getCandidats().set(elec.getCandidats().indexOf(oldName), tf.getText());
+            cands.getItems().removeAll(cands.getItems());
+            initCandidatList(cands);
+            stg.close();
+        });
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        Button annuler = new Button("Annuler");
+        HBox.setHgrow(annuler, Priority.ALWAYS);
+        setButtonBlueStyle(annuler);
+        annuler.setOnAction(e -> {
+            stg.close();
+        });
+        Button valider = new Button("Valider");
+        setButtonBlueStyle(valider);
+        HBox.setHgrow(valider, Priority.ALWAYS);
+        valider.setOnAction(e -> {
+            elec.getCandidats().set(elec.getCandidats().indexOf(oldName), tf.getText());
+            cands.getItems().removeAll(cands.getItems());
+            initCandidatList(cands);
+            stg.close();
+        });
+        buttons.getChildren().addAll(annuler, valider);
+        buttons.setSpacing(20);
+        editing.getChildren().addAll(texte, tf, buttons);
+        Scene sc = new Scene(editing, 800, 300);
+        stg.setResizable(false);
+        stg.setScene(sc);
+        stg.setTitle(oldName);
+        stg.show();
     }
 
     public static void setButtonStyleActive(Button b) {
