@@ -59,9 +59,14 @@ public class Elections {
         }
         Set<Integer> pos = new HashSet<Integer>();
         int size;
-        do {
-            size = r.nextInt(this.getSettings().getMinRandomAbstention(), this.getSettings().getMaxRandomAbstention());
-        } while(size > s.getVotes().size());
+        int min = this.getSettings().getMinRandomAbstention();
+        if(min > s.getVotes().size()) {
+            size = r.nextInt(s.getVotes().size());
+        } else {
+            do {
+                size = r.nextInt(this.getSettings().getMinRandomAbstention(), this.getSettings().getMaxRandomAbstention());
+            } while(size > s.getVotes().size());
+        }
         while(pos.size() < size) {
             pos.add(r.nextInt(s.getVotes().size() - 1));
         }

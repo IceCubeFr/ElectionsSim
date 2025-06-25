@@ -1,6 +1,7 @@
 package dev;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,10 @@ public class Scenario {
      * @param v vote à ajouter
      */
     public void addVoix(Voix v) {this.votes.add(v);}
+
+    public void addAllVoix(Collection<Voix> v) {
+        this.votes.addAll(v);
+    }
 
     /**
      * Retire une voix de la liste des votes à partir de l'objet

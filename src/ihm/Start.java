@@ -42,7 +42,7 @@ public class Start extends Application {
     private static VBox main;
     public static ArrayList<String> candidats = new ArrayList<String>();
     public static String secretCode = "aaa";
-    private static Elections elec = new Elections(candidats, secretCode);
+    public static Elections elec = new Elections(candidats, secretCode);
     private static String pastelGreen = "#A8E6A3";
     private static String pastelRed = "#F5A9A9";
 
@@ -221,7 +221,15 @@ public class Start extends Application {
         lancer.setMaxWidth(Double.MAX_VALUE);
         setButtonBlueStyle(lancer);
         lancer.setOnAction(e -> {
-            /* Là yaura tous les trucs pour faire les tours */
+            Stage stg = new Stage();
+            NewTour nt = new NewTour(elec.getSettings().isCanAbstention(), elec.getSettings().isCanVoteWhite(), elec.getSettings().isAskSecretCode());
+            nt.start(stg);
+            stg.setOnHidden(ev -> {
+                Scenario s = new Scenario();
+                s.addAllVoix(nt.tour);
+                if(elec.getScenarios().isEmpty()) {elec.getScenarios().add(s);}
+                else {elec.getScenarios().set(0, s);}
+            });
         });
         main.getChildren().addAll(text, lancer);
         main.setAlignment(Pos.CENTER);
@@ -652,7 +660,7 @@ public class Start extends Application {
     }
 
     @Override
-    public void start(Stage stg) throws Exception {
+    public void start(Stage stg) {
         HBox screen = new HBox();
         Scene sc = new Scene(screen, 1080, 720);
         VBox right = new VBox();
@@ -674,7 +682,7 @@ public class Start extends Application {
         screen.setPadding(new Insets(25));
         update(1);
         stg.setScene(sc);
-        stg.setTitle("prout");
+        stg.setTitle("ElectionsSim");
         stg.show();
 
     }
