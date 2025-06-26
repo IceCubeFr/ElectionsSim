@@ -3,19 +3,23 @@ package ihm;
 import java.util.ArrayList;
 
 import dev.*;
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class NewTour extends Application {
     public ArrayList<Voix> tour;
@@ -28,6 +32,57 @@ public class NewTour extends Application {
         this.canVoteWhite = canWhite;
         this.askSecretCode = askCode;
         this.tour = new ArrayList<Voix>();
+    }
+
+    public static void askSecretCode(Runnable suite) {
+        Stage stg = new Stage();
+        VBox container = new VBox();
+        container.setSpacing(20);
+        container.setPadding(new Insets(20));
+        Label title = new Label("Entrez le code secret pour continuer");
+        title.setFont(Start.taille20);
+        PasswordField passwrd = new PasswordField();
+        passwrd.setPromptText("Code secret");
+        Label error = new Label();
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+        Button annuler = new Button("Annuler");
+        HBox.setHgrow(annuler, Priority.ALWAYS);
+        Start.setButtonBlueStyle(annuler);
+        annuler.setOnAction(e -> {
+            stg.close();
+        });
+        Button valider = new Button("Valider");
+        Start.setButtonBlueStyle(valider);
+        HBox.setHgrow(valider, Priority.ALWAYS);
+        valider.setOnAction(e -> secretHandler(e, stg, suite, error, passwrd));
+        passwrd.setOnAction(e -> secretHandler(e, stg, suite, error, passwrd));
+        buttons.getChildren().addAll(annuler, valider);
+        container.getChildren().addAll(title, passwrd, error, buttons);
+        Scene sc = new Scene(container);
+        stg.setScene(sc);
+        stg.setTitle("Saisie du code secret");
+        stg.show();
+        sc.getWindow().setWidth(600);
+        sc.getWindow().setHeight(300);
+    }
+
+    public static void secretHandler(ActionEvent e, Stage stg, Runnable suite, Label error, PasswordField pf) {
+        if(Start.secretCode.equals(pf.getText())) {
+            stg.close();
+            suite.run();
+        } else {
+            error.setText("Le code ne correspond pas. Réessayez.");
+            String originalStyle = "-fx-text-fill: black; -fx-background-color: transparent;";
+
+            Timeline flash = new Timeline(
+                new KeyFrame(Duration.ZERO, ev -> error.setStyle("-fx-text-fill: white; -fx-background-color: red;")),
+                new KeyFrame(Duration.millis(150), ev -> error.setStyle(originalStyle))
+            );
+            flash.setCycleCount(1);
+            flash.play();
+        }
     }
 
     @Override
@@ -86,7 +141,7 @@ public class NewTour extends Application {
         valider.setMinWidth(200);
         Button end = new Button("Finir le tour");
         end.setOnAction(e -> {
-            stg.close();
+            askSecretCode(() -> stg.close());
         });
         Start.setButtonBlueStyle(end);
         HBox.setHgrow(end, Priority.ALWAYS);
@@ -125,7 +180,11 @@ public class NewTour extends Application {
         Start.setButtonBlueStyle(valider);
         HBox.setHgrow(valider, Priority.ALWAYS);
         valider.setOnAction(e -> {
-            tour.add(v);
+            if(this.askSecretCode) {
+                askSecretCode(() -> tour.add(v));
+            } else {
+                tour.add(v);
+            }
             stg.close();
         });
         buttons.getChildren().addAll(annuler, valider);
