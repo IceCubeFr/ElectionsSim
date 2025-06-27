@@ -53,25 +53,29 @@ public class Elections {
 
     public Scenario startNewRandomScenario() {
         Scenario s = new Scenario();
-        for(Voix vx : this.scenarios.get(0).getVotes()) {
-            Voix v = new Voix(vx.getCandidat(), vx.isAbstention(), vx.isWhite());
-            s.addVoix(v);
-        }
-        Set<Integer> pos = new HashSet<Integer>();
-        int size;
-        int min = this.getSettings().getMinRandomAbstention();
-        if(min > s.getVotes().size()) {
-            size = r.nextInt(s.getVotes().size());
-        } else {
-            do {
-                size = r.nextInt(this.getSettings().getMinRandomAbstention(), this.getSettings().getMaxRandomAbstention());
-            } while(size > s.getVotes().size());
-        }
-        while(pos.size() < size) {
-            pos.add(r.nextInt(s.getVotes().size() - 1));
-        }
-        for(Integer i : pos) {
-            s.getVotes().get(i).makeAbstention();
+        try {
+            for(Voix vx : this.scenarios.get(0).getVotes()) {
+                Voix v = new Voix(vx.getCandidat(), vx.isAbstention(), vx.isWhite());
+                s.addVoix(v);
+            }
+            Set<Integer> pos = new HashSet<Integer>();
+            int size;
+            int min = this.getSettings().getMinRandomAbstention();
+            if(min > s.getVotes().size()) {
+                size = r.nextInt(s.getVotes().size());
+            } else {
+                do {
+                    size = r.nextInt(this.getSettings().getMinRandomAbstention(), this.getSettings().getMaxRandomAbstention());
+                } while(size > s.getVotes().size());
+            }
+            while(pos.size() < size) {
+                pos.add(r.nextInt(s.getVotes().size() - 1));
+            }
+            for(Integer i : pos) {
+                s.getVotes().get(i).makeAbstention();
+            }
+        } catch (Exception e) {
+            System.out.println("Problème aléatoire");
         }
         return s;
     }

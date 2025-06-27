@@ -69,7 +69,7 @@ public class NewTour extends Application {
     }
 
     public static void secretHandler(ActionEvent e, Stage stg, Runnable suite, Label error, PasswordField pf) {
-        if(Start.secretCode.equals(pf.getText())) {
+        if(Start.elec.getSettings().getSecretCode().equals(pf.getText())) {
             stg.close();
             suite.run();
         } else {

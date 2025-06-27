@@ -2,7 +2,6 @@ package ihm;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
 
 import dev.*;
@@ -41,8 +40,7 @@ public class Start extends Application {
     private static Label desc;
     private static VBox main;
     public static ArrayList<String> candidats = new ArrayList<String>();
-    public static String secretCode = "aaa";
-    public static Elections elec = new Elections(candidats, secretCode);
+    public static Elections elec ;
     private static String pastelGreen = "#A8E6A3";
     private static String pastelRed = "#F5A9A9";
 
@@ -69,7 +67,7 @@ public class Start extends Application {
         Label title = new Label("Résultats du tour actuel : ");
         title.setStyle("-fx-text-fill: " + PRIMARY_COLOR + "; -fx-font-weight: bold;");
         title.setFont(taille24);
-        Scenario sc = elec.getScenarios().getFirst();
+        Scenario sc = elec.getScenarios().isEmpty() ? new Scenario() : elec.getScenarios().getFirst();
         Label inscrits = new Label("Inscrits : " + sc.nbVoix());
         inscrits.setFont(taille18);
         Label exprimes = new Label("Exprimés : " + sc.exprimes());
@@ -684,27 +682,11 @@ public class Start extends Application {
         stg.setScene(sc);
         stg.setTitle("ElectionsSim");
         stg.show();
-
+        sc.getWindow().setWidth(1080);
+        sc.getWindow().setHeight(720);
     }
     
     public static void main(String[] args) {
-        String[] cands = new String[]{"lala","pala","mala"};
-        candidats.add("lala");
-        candidats.add("pala");
-        candidats.add("mala");
-        elec = new Elections(candidats, secretCode);
-        Scenario sc = new Scenario();
-        Random r = new Random();
-        for(int i = 0; i < 50; i++) {
-            sc.addVoix(new Voix(cands[r.nextInt(0,3)]));
-            int prob = r.nextInt(100);
-            if(prob < 4) {
-                sc.getVotes().get(i).makeAbstention();
-            } else if(prob > 96) {
-                sc.getVotes().get(i).makeWhite();
-            }
-        }
-        elec.getScenarios().add(sc);
         Application.launch(args);
     }
 }
