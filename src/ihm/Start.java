@@ -687,6 +687,7 @@ public class Start extends Application {
     }
     
     public static void main(String[] args) {
+        elec = new Elections(candidats, "");
         Application.launch(args);
     }
 }

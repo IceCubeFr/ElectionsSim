@@ -1,5 +1,6 @@
 package dev;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map.Entry;
 /**
  * Stocke les différents votes pour l'élection actuelle et calcule les stats (Participation, abstention...)
  */
-public class Scenario {
+public class Scenario implements Serializable {
     private ArrayList<Voix> votes;
 
     /**

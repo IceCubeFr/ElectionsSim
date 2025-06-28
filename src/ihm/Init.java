@@ -201,6 +201,7 @@ public class Init extends Application {
         title.setFont(Start.taille24);
 
         Button charger = new Button("Charger");
+        charger.setDisable(true);
         charger.setStyle(Start.BUTTON_STYLE_INACTIVE);
         charger.setOnMouseEntered(e -> {charger.setStyle(Start.BUTTON_STYLE_ACTIVE);});
         charger.setOnMouseExited(e -> {charger.setStyle(Start.BUTTON_STYLE_INACTIVE);});

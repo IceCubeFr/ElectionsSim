@@ -1,12 +1,13 @@
 package dev;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Elections {
+public class Elections implements Serializable {
     private ArrayList<Scenario> scenarios;
     private SettingsManager settings;
     private static Scanner sc = new Scanner(System.in);
