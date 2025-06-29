@@ -1,6 +1,8 @@
 package dev;
 
-public class Voix {
+import java.io.Serializable;
+
+public class Voix implements Serializable {
     private String candidat;
     private boolean abstention;
     private boolean blanc;

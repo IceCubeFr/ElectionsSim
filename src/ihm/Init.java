@@ -2,6 +2,7 @@ package ihm;
 
 import java.util.ArrayList;
 
+import dev.DataImporter;
 import dev.Elections;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -20,8 +21,39 @@ import javafx.stage.Stage;
 
 public class Init extends Application {
 
-    public void charger(VBox vb) {
-
+    public void charger(VBox vb, Stage stg) {
+        vb.getChildren().removeAll(vb.getChildren());
+        Button retour = new Button("Retour");
+        Start.setButtonBlueStyle(retour);
+        retour.setOnAction(e -> {
+            start(stg);
+        });
+        ArrayList<String> files = DataImporter.fileList();
+        ListView<String> filesList = new ListView<String>();
+        filesList.getItems().addAll(files);
+        Button charger = new Button("Charger");
+        Start.setButtonBlueStyle(charger);
+        charger.setDisable(true);
+        charger.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(charger, Priority.ALWAYS);
+        filesList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            charger.setDisable(newVal == null);
+        });
+        charger.setOnAction(e -> {
+            String file = filesList.getSelectionModel().getSelectedItem();
+            if(file != null) {
+                Elections elec = DataImporter.importElections(file);
+                if(elec != null) {
+                    Start.elec = elec;
+                    Start st = new Start();
+                    st.start(new Stage());
+                    stg.close();
+                } else {
+                    vb.getChildren().add(new Label("Erreur à l'importation des données."));
+                }
+            }
+        });
+        vb.getChildren().addAll(retour, filesList, charger);
     }
 
     public void initCands(ListView<HBox> lv, ArrayList<String> cands, Button validation) {
@@ -117,6 +149,12 @@ public class Init extends Application {
     }
 
     public void nouveau(VBox vb, Stage stg) {
+        Button retour = new Button("Retour");
+        Start.setButtonBlueStyle(retour);
+        retour.setOnAction(e -> {
+            start(stg);
+        });
+
         vb.getChildren().removeAll(vb.getChildren());
 
         Button valider = new Button("Lancer les élections");
@@ -191,7 +229,7 @@ public class Init extends Application {
             stg.close();
         });
 
-        vb.getChildren().addAll(cands, entry, secretCode, valider);
+        vb.getChildren().addAll(retour, cands, entry, secretCode, valider);
     }
 
     public void start(Stage stg) {
@@ -201,7 +239,6 @@ public class Init extends Application {
         title.setFont(Start.taille24);
 
         Button charger = new Button("Charger");
-        charger.setDisable(true);
         charger.setStyle(Start.BUTTON_STYLE_INACTIVE);
         charger.setOnMouseEntered(e -> {charger.setStyle(Start.BUTTON_STYLE_ACTIVE);});
         charger.setOnMouseExited(e -> {charger.setStyle(Start.BUTTON_STYLE_INACTIVE);});
@@ -210,7 +247,7 @@ public class Init extends Application {
         charger.setMinHeight(100);
         charger.setMaxHeight(100);
         charger.setOnAction(e -> {
-
+            charger(main, stg);
         });
 
         Button nouveau = new Button("Nouveau");

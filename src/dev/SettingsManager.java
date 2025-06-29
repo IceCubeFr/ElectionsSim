@@ -1,5 +1,6 @@
 package dev;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * Elle inclut des options comme la possibilité de voter blanc, de s'abstenir,
  * l'utilisation d'un code secret, ainsi que des bornes pour une abstention aléatoire.
  */
-public class SettingsManager {
+public class SettingsManager implements Serializable {
     private boolean canVoteWhite;
     private boolean canAbstention;
     private ArrayList<String> candidats;

@@ -1,5 +1,8 @@
 package ihm;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +21,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -97,6 +102,18 @@ public class Start extends Application {
             cand.setSpacing(10);
             main.getChildren().add(cand);
         }
+        Button sauvegarder = new Button("Sauvegarder");
+        sauvegarder.setMaxWidth(Double.MAX_VALUE);
+        setButtonBlueStyle(sauvegarder);
+        HBox.setHgrow(sauvegarder, Priority.ALWAYS);
+        main.getChildren().add(sauvegarder);
+        sauvegarder.setOnAction(e -> {
+            LocalDateTime now = LocalDateTime.now();
+            String name = now.toLocalDate().toString() + "_" + now.getHour() + ":" + now.getMinute() + ":" + now.getSecond();
+            Label notif = new Label("Sauvegardé sous le nom de " + name);
+            DataExporter.exporter(elec, name);
+            main.getChildren().add(notif);
+        });
     }
 
     public static void updateListView(ListView<Label> lv) {
@@ -628,6 +645,11 @@ public class Start extends Application {
         if(selected == null) {desc = new Label("Accueil");}
         else {desc = new Label(selected.getText());}
         desc.setFont(taille18);
+        Image logo = new Image("file:./res/snu.png");
+        ImageView logoviewer = new ImageView(logo);
+        logoviewer.setFitWidth(200);
+        logoviewer.setFitHeight(150);
+        logoviewer.setPreserveRatio(true);
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         Button accueil = new Button("Accueil");
@@ -650,7 +672,7 @@ public class Start extends Application {
         buttons.setStyle("-fx-border-color: " + SECONDARY_COLOR + "; -fx-border-width: 6px; -fx-border-radius: 40px;");
         buttons.setSpacing(10);
 
-        menu.getChildren().addAll(topSpace, title, desc, spacer, buttons);
+        menu.getChildren().addAll(topSpace, title, desc, logoviewer, spacer, buttons);
         menu.setMinWidth(250);
         menu.setMaxWidth(250);
         menu.setAlignment(Pos.CENTER);
@@ -660,7 +682,7 @@ public class Start extends Application {
     @Override
     public void start(Stage stg) {
         HBox screen = new HBox();
-        Scene sc = new Scene(screen, 1080, 720);
+        Scene sc = new Scene(screen);
         VBox right = new VBox();
         main = new VBox();
         VBox vb2 = initMenu();
@@ -681,9 +703,9 @@ public class Start extends Application {
         update(1);
         stg.setScene(sc);
         stg.setTitle("ElectionsSim");
+        stg.setMaximized(true);
+        stg.setResizable(false);
         stg.show();
-        sc.getWindow().setWidth(1080);
-        sc.getWindow().setHeight(720);
     }
     
     public static void main(String[] args) {
