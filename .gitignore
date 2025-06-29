@@ -7,3 +7,4 @@
 *.log
 **/lib/
 *.electionssim
+ihm-compile.sh
