@@ -43,4 +43,4 @@ Les commits sont étiquettés en fonction de leur contenu :
 *Vous retrouverez la maquette basse fidélité ici quand elle sera terminée*
 
 ### Droits d'utilisations
-Le code est open-source, vous pouvez vous en inspirer pour vos projets. J'interdit néanmoins la copie et l'appropriation dans un but commercial. L'utilisation de l'application est autorisée à tout individu souhaitant l'utiliser. Pensez à vous référer aux Releases pour le télécharger.
+Ce projet est soumis à la licence GNU GPL 3. Retrouvez les conditions dans le fichier LICENCE
