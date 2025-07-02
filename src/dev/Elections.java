@@ -69,8 +69,10 @@ public class Elections implements Serializable {
                     size = r.nextInt(this.getSettings().getMinRandomAbstention(), this.getSettings().getMaxRandomAbstention());
                 } while(size > s.getVotes().size());
             }
-            while(pos.size() < size) {
+            int added = 0;
+            while(added < size) {
                 pos.add(r.nextInt(s.getVotes().size() - 1));
+                added++;
             }
             for(Integer i : pos) {
                 s.getVotes().get(i).makeAbstention();
