@@ -7,6 +7,7 @@ import dev.Scenario;
 import dev.Voix;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,13 +36,15 @@ public class VirtualVotes extends Application{
         VBox main = new VBox();
         Label title = new Label("Injecter des voix");
         title.setFont(Start.taille20);
-        title.setStyle("-fx-text-fill: " + Start.PRIMARY_BG + ";");
+        title.setStyle("-fx-text-fill: " + Start.PRIMARY_COLOR + ";");
+        title.setAlignment(Pos.CENTER);
         ListView<HBox> cands = new ListView<HBox>();
         for(String s : this.candidats) {
             if(!this.voices.containsKey(s)) {
                 this.voices.put(s, 0);
             }
             HBox candidat = new HBox();
+            candidat.setAlignment(Pos.CENTER);
             Label name = new Label(s);
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
