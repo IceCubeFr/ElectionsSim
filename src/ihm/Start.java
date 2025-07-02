@@ -246,7 +246,20 @@ public class Start extends Application {
                 else {elec.getScenarios().set(0, s);}
             });
         });
-        main.getChildren().addAll(text, lancer);
+        Label injectText = new Label("Injectez des voix pour des candidats sans refaire de vote");
+        injectText.setAlignment(Pos.CENTER);
+        injectText.setFont(taille18);
+        Button injectButton = new Button("Injecter des voix");
+        injectButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(injectButton, Priority.ALWAYS);
+        setButtonBlueStyle(injectButton);
+        injectButton.setOnAction(e -> {
+            Scenario sc = elec.getScenarios().isEmpty() ? new Scenario() : elec.getScenarios().getFirst();
+            VirtualVotes vv = new VirtualVotes(elec.getCandidats(), sc);
+            Stage stg = new Stage();
+            vv.start(stg);
+        });
+        main.getChildren().addAll(text, lancer, injectText, injectButton);
         main.setAlignment(Pos.CENTER);
     }
 
