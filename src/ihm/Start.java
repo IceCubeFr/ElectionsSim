@@ -93,7 +93,7 @@ public class Start extends Application {
             name.setFont(taille18);
             Region space = new Region();
             HBox.setHgrow(space, Priority.ALWAYS);
-            Label part = new Label(res.getValue() * 1000 / (sc.exprimes() - sc.nbBlanc()) / 10.0 + "%");
+            Label part = new Label(res.getValue() + " voix soit " + res.getValue() * 1000 / (sc.exprimes() - sc.nbBlanc()) / 10.0 + "%");
             part.setFont(taille18);
             ProgressBar pb = new ProgressBar(res.getValue() * 100 / (sc.exprimes() - sc.nbBlanc()) / 100.0);
             pb.setPrefWidth(300);
@@ -259,7 +259,17 @@ public class Start extends Application {
             Stage stg = new Stage();
             vv.start(stg);
         });
-        main.getChildren().addAll(text, lancer, injectText, injectButton);
+        Spinner<Integer> absInjec = new Spinner<Integer>();
+        absInjec.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+        Button validAbsInjec = new Button("Injecter des abstentions");
+        validAbsInjec.setOnAction(e -> {
+            for(int i = 0; i < absInjec.getValue(); i++) {
+                Voix v = new Voix("", true, false);
+                elec.getScenarios().getFirst().addVoix(v);
+                update(1);
+            }
+        });
+        main.getChildren().addAll(text, lancer, injectText, injectButton, absInjec, validAbsInjec);
         main.setAlignment(Pos.CENTER);
     }
 
