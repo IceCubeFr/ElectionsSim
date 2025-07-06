@@ -1,8 +1,6 @@
 package ihm;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -246,6 +244,11 @@ public class Start extends Application {
                 else {elec.getScenarios().set(0, s);}
             });
         });
+        Region separator = new Region();
+        separator.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(separator, Priority.ALWAYS);
+        separator.setStyle("-fx-background-color: " + pastelRed + "; -fx-background-radius: 40px;");
+        separator.setPadding(new Insets(1,0,1,0));
         Label injectText = new Label("Injectez des voix pour des candidats sans refaire de vote");
         injectText.setAlignment(Pos.CENTER);
         injectText.setFont(taille18);
@@ -260,8 +263,17 @@ public class Start extends Application {
             vv.start(stg);
         });
         Spinner<Integer> absInjec = new Spinner<Integer>();
+        setSpinnerStyle(absInjec);
         absInjec.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
         Button validAbsInjec = new Button("Injecter des abstentions");
+        Region separator2 = new Region();
+        separator2.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(separator2, Priority.ALWAYS);
+        separator2.setStyle("-fx-background-color: " + pastelRed + "; -fx-background-radius: 40px;");
+        separator2.setPadding(new Insets(1,0,1,0));
+        setButtonBlueStyle(validAbsInjec);
+        validAbsInjec.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(validAbsInjec, Priority.ALWAYS);
         validAbsInjec.setOnAction(e -> {
             for(int i = 0; i < absInjec.getValue(); i++) {
                 Voix v = new Voix("", true, false);
@@ -269,7 +281,7 @@ public class Start extends Application {
                 update(1);
             }
         });
-        main.getChildren().addAll(text, lancer, injectText, injectButton, absInjec, validAbsInjec);
+        main.getChildren().addAll(text, lancer, separator, injectText, injectButton, separator2, absInjec, validAbsInjec);
         main.setAlignment(Pos.CENTER);
     }
 
